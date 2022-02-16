@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "2ffAvl85rvvhpYneuVhzVuVhULIU93IGosXKAJmPzOGNAo6cBCa9qseBH+kPHldwQi2lS7DzedzJZYWDEywvvA==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\EG\\Desktop\\FunctionalAssignment3\\FunctionalAssignment3.fsproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\EG\\.nuget\\packages\\fsharp.core\\6.0.1\\fsharp.core.6.0.1.nupkg.sha512"
+  ],
+  "logs": []
+}
