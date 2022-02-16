@@ -25,7 +25,7 @@ let rec arithEvalState a (map: Map<string, int>) =
     | N b -> b
     | V v -> 
         try
-            (arithEvalState (N map[v]) map)
+            (arithEvalState (N map.[v]) map)
         with _ ->
             (arithEvalState (N 0) map)
     | Add (b,c) -> (arithEvalState b map) + (arithEvalState c map)
@@ -48,7 +48,7 @@ let rec arithEval a (word: word) (map: Map<string, int>) =
     | N n -> n
     | V v -> 
         try
-            (arithEval (N map[v]) word map)
+            (arithEval (N map.[v]) word map)
         with _ ->
             (arithEval (N 0) word map)
     | WL -> word.Length

@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\EG\\Desktop\\FunctionalAssignment3\\FunctionalAssignment3.fsproj": {}
+    "c:\\Users\\EG\\Desktop\\FunctionalAssignment3\\FunctionalAssignment3.fsproj": {}
   },
   "projects": {
-    "C:\\Users\\EG\\Desktop\\FunctionalAssignment3\\FunctionalAssignment3.fsproj": {
+    "c:\\Users\\EG\\Desktop\\FunctionalAssignment3\\FunctionalAssignment3.fsproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\EG\\Desktop\\FunctionalAssignment3\\FunctionalAssignment3.fsproj",
+        "projectUniqueName": "c:\\Users\\EG\\Desktop\\FunctionalAssignment3\\FunctionalAssignment3.fsproj",
         "projectName": "FunctionalAssignment3",
-        "projectPath": "C:\\Users\\EG\\Desktop\\FunctionalAssignment3\\FunctionalAssignment3.fsproj",
+        "projectPath": "c:\\Users\\EG\\Desktop\\FunctionalAssignment3\\FunctionalAssignment3.fsproj",
         "packagesPath": "C:\\Users\\EG\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\EG\\Desktop\\FunctionalAssignment3\\obj\\",
+        "outputPath": "c:\\Users\\EG\\Desktop\\FunctionalAssignment3\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\EG\\AppData\\Roaming\\NuGet\\NuGet.Config"
