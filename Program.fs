@@ -90,9 +90,54 @@ type bExp =
     | IsLetter of cExp (* check for letter *)
     | IsVowel of cExp (* check for vowel *)
 
+let (~~) b = Not b
+let (.&&.) b1 b2 = Conj (b1, b2)
+let (.||.) b1 b2 = ~~(~~b1 .&&. ~~b2) (* boolean disjunction *)
 
+let (.=.) a b = AEq (a, b)
+let (.<.) a b = ALt (a, b)
+let (.<>.) a b = ~~(a .=. b) (* numeric inequality *)
+let (.<=.) a b = a .<. b .||. ~~(a .<>. b) (* numeric less than or equal to *)
+let (.>=.) a b = ~~(a .<. b) (* numeric greater than or equal to *)
+let (.>.) a b = ~~(a .=. b) .&&. (a .>=. b) (* numeric greater than *)
 
+let isVowel (c:char) = 
+    "aeiouyAEIOUY".Contains(c)
 
+let rec boolEval b (word : word) (map : Map<string, int>) =
+    match b with
+    | TT -> true
+    | FF -> false
+    
+    | AEq (a1,a2) -> (arithEval a1 word map) = (arithEval a2 word map)
+    | ALt (a1, a2) -> (arithEval a1 word map) < (arithEval a2 word map)
+
+    | Not b -> not (boolEval b word map)
+    | Conj (b1, b2) -> (boolEval b1 word map) && (boolEval b2 word map)
+
+    |IsDigit c -> System.Char.IsDigit(charEval c word map)
+    |IsLetter c -> System.Char.IsLetter(charEval c word map)
+    |IsVowel c -> isVowel (charEval c word map)
+
+//3.6
+let isConsonant c =
+    Not (IsVowel c)
+
+type stmnt =
+| Skip (* does nothing *)
+| Ass of string * aExp (* variable assignment *)
+| Seq of stmnt * stmnt (* sequential composition *)
+| ITE of bExp * stmnt * stmnt (* if-then-else statement *)
+| While of bExp * stmnt (* while statement *)
+
+//3.7
+let rec evalStmnt (s:stmnt) (word:word) (map:Map<string, int>) =
+    match s with
+    | Skip -> map
+    | Ass (s,i) -> map.Add(s,(arithEval i word map)) 
+    | Seq (s1,s2) -> (evalStmnt s2 word (evalStmnt s1 word map))
+    | ITE (guard, s1, s2) -> if (boolEval guard word map) then (evalStmnt s1 word map) else (evalStmnt s2 word map)
+    | While (guard, s) -> if (boolEval guard word map) then (evalStmnt (While (guard, s)) word (evalStmnt s word map)) else map
 
 //TESTING
 let test expected actual =
@@ -103,6 +148,7 @@ let test expected actual =
 
 [<EntryPoint>]
 let main args =
+    printfn "GREEN"
     printfn "3.1 arithEvalSimple a1: %s" (test 42 (arithEvalSimple (N 42)))
     printfn "3.1 arithEvalSimple a2: %s" (test 3 (arithEvalSimple (N 4 .+. (N 5 .-. N 6))))
     printfn "3.1 arithEvalSimple a3: %s" (test 42 (arithEvalSimple (N 4 .*. N 2 .+. N 34)))
@@ -130,5 +176,27 @@ let main args =
     printfn "3.4 charEval ToLower: %s" (test '*' ( charEval (ToLower (C '*')) [] Map.empty ))
     printfn "3.4 charEval CV: %s" (test 'O' ( charEval (CV (V "x" .-. N 1)) hello (Map.ofList [("x", 5)]) ))
     printfn ""
-    printfn "3.5 : %s" (test  (  ))
+    printfn "3.5 boolEval TT: %s" (test true ( boolEval TT [] Map.empty ))
+    printfn "3.5 boolEval FF: %s" (test false ( boolEval FF [] Map.empty ))
+    printfn "3.5 boolEval TT: %s" (test true ( boolEval ((V "x" .+. V "y") .=. (V "y" .+. V "x")) [] (Map.ofList [("x", 5); ("y", 7)]) ))
+    printfn "3.5 boolEval FF: %s" (test false ( boolEval ((V "x" .+. V "y") .=. (V "y" .-. V "x")) [] (Map.ofList [("x", 5); ("y", 7)]) ))
+    printfn "3.5 boolEval IsLetter: %s" (test true ( boolEval (IsLetter (CV (V "x"))) hello (Map.ofList [("x", 4)]) ))
+    printfn "3.5 boolEval IsLetter: %s" (test false ( boolEval (IsLetter (CV (V "x"))) (('1', 0)::hello) (Map.ofList [("x", 0)]) ))
+    printfn "3.5 boolEval IsDigit: %s" (test false ( boolEval (IsDigit (CV (V "x"))) hello (Map.ofList [("x", 4)]) ))
+    printfn "3.5 boolEval IsDigit: %s" (test true ( boolEval (IsDigit (CV (V "x"))) (('1', 0)::hello) (Map.ofList [("x", 0)]) ))
+    printfn ""
+    printfn "YELLOW"
+    printfn "3.6 isConsonant: %s" (test true ( boolEval (isConsonant (C 'H')) [] Map.empty ))
+    printfn "3.6 isConsonant: %s" (test true ( boolEval (isConsonant (C 'h')) [] Map.empty ))
+    printfn "3.6 isConsonant: %s" (test false ( boolEval (isConsonant (C 'A')) [] Map.empty ))
+    printfn "3.6 isConsonant: %s" (test true ( boolEval (isConsonant (CV (V "x"))) hello (Map.ofList [("x", 0)]) ))
+    printfn "3.6 isConsonant: %s" (test false ( boolEval (isConsonant (CV (V "x"))) hello (Map.ofList [("x", 1)]) ))
+    printfn ""
+    printfn "3.7 evalStmnt: %s" (test (Map<string, int>[]) ( evalStmnt Skip [] Map.empty ))
+    printfn "3.7 evalStmnt: %s" (test (Map<string, int>[("x", 5)]) ( evalStmnt (Ass ("x", N 5)) [] Map.empty ))
+    printfn "3.7 evalStmnt: %s" (test (Map<string, int>[("x", 5); ("y", 7)]) ( evalStmnt (Seq (Ass ("x", WL), Ass ("y", N 7))) hello Map.empty ))
+    printfn "3.7 evalStmnt: %s" (test (Map<string, int>[("x", 1)]) ( evalStmnt (ITE (WL .>=. N 5, Ass ("x", N 1), Ass ("x", N 2))) hello Map.empty ))
+    printfn "3.7 evalStmnt: %s" (test (Map<string, int>[("x", 2)]) ( evalStmnt (ITE (WL .<. N 5, Ass ("x", N 1), Ass ("x", N 2))) hello Map.empty ))
+    printfn "3.7 evalStmnt: %s" (test (Map<string, int>[("x", 6); ("y", 15)]) ( evalStmnt (While (V "x" .<=. WL, Seq (Ass ("y", V "y" .+. V "x"), Ass ("x", V "x" .+. N 1)))) hello Map.empty ))
+    printfn "3.7 evalStmnt: %s" (test (Map<string, int>[("x", 6); ("y", 112)]) ( evalStmnt (While (V "x" .<=. WL, Seq (Ass ("y", V "y" .+. V "x"), Ass ("x", V "x" .+. N 1)))) hello (Map.ofList [("x", 3); ("y", 100)]) ))
     0
