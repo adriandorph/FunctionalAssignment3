@@ -61,10 +61,10 @@ let rec arithEval a (word: word) (map: Map<string, int>) =
 
 //3.4
 type cExp =
-| C of char (* Character value *)
-| ToUpper of cExp (* Converts lower case to upper case character, non-letters are unchanged *)
-| ToLower of cExp (* Converts upper case to lower case character, non-letters are unchanged *)
-| CV of aExp (* Character lookup at word index *)
+    | C of char (* Character value *)
+    | ToUpper of cExp (* Converts lower case to upper case character, non-letters are unchanged *)
+    | ToLower of cExp (* Converts upper case to lower case character, non-letters are unchanged *)
+    | CV of aExp (* Character lookup at word index *)
 
 let rec charEval c (word : word) (map: Map<string, int>) =
     match c with
@@ -100,6 +100,7 @@ let (.<>.) a b = ~~(a .=. b) (* numeric inequality *)
 let (.<=.) a b = a .<. b .||. ~~(a .<>. b) (* numeric less than or equal to *)
 let (.>=.) a b = ~~(a .<. b) (* numeric greater than or equal to *)
 let (.>.) a b = ~~(a .=. b) .&&. (a .>=. b) (* numeric greater than *)
+
 
 let isVowel (c:char) = 
     "aeiouyAEIOUY".Contains(c)
@@ -138,6 +139,60 @@ let rec evalStmnt (s:stmnt) (word:word) (map:Map<string, int>) =
     | Seq (s1,s2) -> (evalStmnt s2 word (evalStmnt s1 word map))
     | ITE (guard, s1, s2) -> if (boolEval guard word map) then (evalStmnt s1 word map) else (evalStmnt s2 word map)
     | While (guard, s) -> if (boolEval guard word map) then (evalStmnt (While (guard, s)) word (evalStmnt s word map)) else map
+
+//3.8
+type squareFun = word -> int -> int -> int
+
+let stmntToSquareFun stmnt = 
+    (fun word (pos:int) acc -> 
+        (evalStmnt stmnt word (Map<string, int>[("_pos_", pos); ("_acc_", acc)])).["_result_"]
+    )
+
+let singleLetterScore = stmntToSquareFun (Ass ("_result_", arithSingleLetterScore))
+let doubleLetterScore = stmntToSquareFun (Ass ("_result_", arithDoubleLetterScore))
+let tripleLetterScore = stmntToSquareFun (Ass ("_result_", arithTripleLetterScore))
+let doubleWordScore = stmntToSquareFun (Ass ("_result_", arithDoubleWordScore))
+let tripleWordScore = stmntToSquareFun (Ass ("_result_", arithTripleWordScore))
+
+let containsNumbers = 
+  stmntToSquareFun 
+    (Seq (Ass ("_result_", V "_acc_"),
+          While (V "i" .<. WL,
+                 ITE (IsDigit (CV (V "i")),
+                      Seq (
+                           Ass ("_result_", V "_result_" .*. N -1),
+                           Ass ("i", WL)),
+                      Ass ("i", V "i" .+. N 1)))))
+
+//3.9
+let oddConsonants :stmnt = 
+    (Seq (
+        Seq(
+        Ass ("cons", N 1),
+        Seq (
+            Ass ("_result_", V "_acc_"),
+                While (V "i" .<. WL,
+                    Seq (ITE (IsVowel (CV (V "i")),
+                         (ITE ( 
+                            (AEq ((V "cons"), (N 1)),
+                                (Ass ("cons", N -1)),
+                                (Ass ("cons", N 1))
+                            )
+                        )
+                        ), Skip
+                    ), Seq (
+                            Ass ("_result_", V "_result_" .+. N 1),
+                            Ass ("i", WL)
+                            )
+                        )
+                    )
+        )
+        ),
+        (Ass ("_result_", (V "_result_") .*. (V "cons") .*. N -1)
+    )))
+
+let aaaaaaaaa = stmntToSquareFun oddConsonants
+
 
 //TESTING
 let test expected actual =
@@ -199,4 +254,15 @@ let main args =
     printfn "3.7 evalStmnt: %s" (test (Map<string, int>[("x", 2)]) ( evalStmnt (ITE (WL .<. N 5, Ass ("x", N 1), Ass ("x", N 2))) hello Map.empty ))
     printfn "3.7 evalStmnt: %s" (test (Map<string, int>[("x", 6); ("y", 15)]) ( evalStmnt (While (V "x" .<=. WL, Seq (Ass ("y", V "y" .+. V "x"), Ass ("x", V "x" .+. N 1)))) hello Map.empty ))
     printfn "3.7 evalStmnt: %s" (test (Map<string, int>[("x", 6); ("y", 112)]) ( evalStmnt (While (V "x" .<=. WL, Seq (Ass ("y", V "y" .+. V "x"), Ass ("x", V "x" .+. N 1)))) hello (Map.ofList [("x", 3); ("y", 100)]) ))
+    printfn "3.8 stmntToSquareFun sls %s" (test 4 ( singleLetterScore hello 0 0 ))
+    printfn "3.8 stmntToSquareFun dls %s" (test 8 ( doubleLetterScore hello 0 0 ))
+    printfn "3.8 stmntToSquareFun tls %s" (test 12 ( tripleLetterScore hello 0 0 ))
+    printfn "3.8 stmntToSquareFun sls %s" (test 46 ( singleLetterScore hello 0 42 ))
+    printfn "3.8 stmntToSquareFun dls %s" (test 50 ( doubleLetterScore hello 0 42 ))
+    printfn "3.8 stmntToSquareFun tls %s" (test 54 ( tripleLetterScore hello 0 42 ))
+    printfn "3.8 stmntToSquareFun contains %s" (test 50 ( containsNumbers hello 5 50 ))
+    printfn "3.8 stmntToSquareFun contains %s" (test -50 ( containsNumbers (('0', 100)::hello) 5 50 ))
+    printfn "3.8 stmntToSquareFun contains %s" (test -50 ( containsNumbers (hello @ [('0', 100)]) 5 50 ))
+    printfn ""
+    printfn "3.9 oddConsonants: %s" (test -8 (aaaaaaaaa hello 0 0)) 
     0

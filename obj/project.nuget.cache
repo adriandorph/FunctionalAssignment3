@@ -1,10 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "JRAPnj71Sdd2fyHiupEwOf16EEW1p2/OsqjGgjiBBRgSINymCK+6jfWkh5Nhy+iytjMK/Zi5ZGhUO7Qgz2lgvg==",
+  "dgSpecHash": "v1oa4P7GcrlhKRxoUr/psyTz3MRM3Xo661j0CcGFnPU8sIqgQtFScDcmqIdCRKGu532wV0Qyex5O6PNhqU+mYQ==",
   "success": true,
-  "projectFilePath": "c:\\Users\\EG\\Desktop\\FunctionalAssignment3\\FunctionalAssignment3.fsproj",
+  "projectFilePath": "/Users/adrian/Documents/ITU/4. Semester/Funktionel Programmering/Assignments/FunctionalAssignment3/FunctionalAssignment3.fsproj",
   "expectedPackageFiles": [
-    "C:\\Users\\EG\\.nuget\\packages\\fsharp.core\\6.0.1\\fsharp.core.6.0.1.nupkg.sha512"
+    "/Users/adrian/.nuget/packages/fsharp.core/5.0.0/fsharp.core.5.0.0.nupkg.sha512"
   ],
   "logs": []
 }

@@ -1,26 +1,27 @@
 {
   "format": 1,
   "restore": {
-    "c:\\Users\\EG\\Desktop\\FunctionalAssignment3\\FunctionalAssignment3.fsproj": {}
+    "/Users/adrian/Documents/ITU/4. Semester/Funktionel Programmering/Assignments/FunctionalAssignment3/FunctionalAssignment3.fsproj": {}
   },
   "projects": {
-    "c:\\Users\\EG\\Desktop\\FunctionalAssignment3\\FunctionalAssignment3.fsproj": {
+    "/Users/adrian/Documents/ITU/4. Semester/Funktionel Programmering/Assignments/FunctionalAssignment3/FunctionalAssignment3.fsproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "c:\\Users\\EG\\Desktop\\FunctionalAssignment3\\FunctionalAssignment3.fsproj",
+        "projectUniqueName": "/Users/adrian/Documents/ITU/4. Semester/Funktionel Programmering/Assignments/FunctionalAssignment3/FunctionalAssignment3.fsproj",
         "projectName": "FunctionalAssignment3",
-        "projectPath": "c:\\Users\\EG\\Desktop\\FunctionalAssignment3\\FunctionalAssignment3.fsproj",
-        "packagesPath": "C:\\Users\\EG\\.nuget\\packages\\",
-        "outputPath": "c:\\Users\\EG\\Desktop\\FunctionalAssignment3\\obj\\",
+        "projectPath": "/Users/adrian/Documents/ITU/4. Semester/Funktionel Programmering/Assignments/FunctionalAssignment3/FunctionalAssignment3.fsproj",
+        "packagesPath": "/Users/adrian/.nuget/packages/",
+        "outputPath": "/Users/adrian/Documents/ITU/4. Semester/Funktionel Programmering/Assignments/FunctionalAssignment3/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\EG\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "/Users/adrian/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net6.0"
         ],
         "sources": {
-          "https://api.nuget.org/v3/index.json": {}
+          "https://api.nuget.org/v3/index.json": {},
+          "https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet-tools/nuget/v3/index.json": {}
         },
         "frameworks": {
           "net6.0": {
@@ -36,7 +37,7 @@
             "FSharp.Core": {
               "include": "Runtime, Compile, Build, Native, Analyzers, BuildTransitive",
               "target": "Package",
-              "version": "[6.0.1, )",
+              "version": "[5.0.0-beta.*, )",
               "generatePathProperty": true
             }
           },
@@ -55,7 +56,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.102\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/6.0.100-preview.3.21202.5/RuntimeIdentifierGraph.json"
         }
       }
     }
